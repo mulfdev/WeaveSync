@@ -1,0 +1,22 @@
+{
+  "name": "downweave",
+  "version": "0.0.1",
+  "description": "download the entire weave",
+  "main": "main.js",
+  "scripts": {
+    "dev": "tsx ./src/main.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mulf",
+  "license": "MIT",
+  "dependencies": {
+    "arweave": "^1.14.1",
+    "arweavekit": "^1.4.6",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "tsx": "^3.12.7"
+  }
+}
