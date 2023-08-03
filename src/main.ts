@@ -1,32 +1,38 @@
 import Arweave from "arweave";
-function main() {
-  const arweave = Arweave.init({
-    host: "arweave.net", // Hostname or IP address for a Arweave host
-    port: 443, // Port
-    protocol: "https", // Network protocol http or https
+import path from "node:path";
+import fs from "node:fs";
+import { insertBlockDataBatch } from "./core/db";
+
+const arweave = Arweave.init({
+  host: "arweave.net", // Hostname or IP address for a Arweave host
+  port: 443, // Port
+  protocol: "https", // Network protocol http or https
+});
+
+type Params = {
+  throttleTime: number;
+};
+
+async function index({ throttleTime }: Params) {
+  // let { height } = await arweave.network.getInfo().catch((e) => {
+  //   throw new Error("Could not get current height " + e);
+  // });
+
+  let currentBlock = await arweave.blocks.getCurrent().catch((e) => {
+    throw new Error("could not get current block hash " + e);
   });
 
-  async function getGenesisBlock() {
-    let currentHeight = await arweave.network
-      .getInfo()
-      .then((networkInfo) => networkInfo.height);
+  while (currentBlock.previous_block) {
+    currentBlock = await arweave.blocks.get(currentBlock.previous_block);
 
-    console.log(currentHeight);
-    let genesisBlock = null;
+    insertBlockDataBatch(currentBlock, 3);
 
-    while (currentHeight >= 0) {
-      let block = await arweave.blocks.get(currentHeight.toString());
-      if (block.indep_hash == "genesis") {
-        genesisBlock = block;
-        break;
-      }
-      currentHeight--;
-    }
-
-    return genesisBlock;
+    await new Promise((res) => setTimeout(res, throttleTime));
   }
+}
 
-  getGenesisBlock().then((block) => console.log(block));
+function main() {
+  index({ throttleTime: 800 });
 }
 
 main();
