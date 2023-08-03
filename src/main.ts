@@ -1,7 +1,5 @@
 import Arweave from "arweave";
-import path from "node:path";
-import fs from "node:fs";
-import { insertBlockDataBatch } from "./core/db";
+import { addToDB } from "./core/db";
 
 const arweave = Arweave.init({
   host: "arweave.net", // Hostname or IP address for a Arweave host
@@ -14,9 +12,9 @@ type Params = {
 };
 
 async function index({ throttleTime }: Params) {
-  // let { height } = await arweave.network.getInfo().catch((e) => {
-  //   throw new Error("Could not get current height " + e);
-  // });
+  await arweave.network.getInfo().catch((e) => {
+    throw new Error("Could not get current height " + e);
+  });
 
   let currentBlock = await arweave.blocks.getCurrent().catch((e) => {
     throw new Error("could not get current block hash " + e);
@@ -25,14 +23,14 @@ async function index({ throttleTime }: Params) {
   while (currentBlock.previous_block) {
     currentBlock = await arweave.blocks.get(currentBlock.previous_block);
 
-    insertBlockDataBatch(currentBlock, 3);
+    addToDB(currentBlock);
 
     await new Promise((res) => setTimeout(res, throttleTime));
   }
 }
 
 function main() {
-  index({ throttleTime: 800 });
+  index({ throttleTime: 50 });
 }
 
 main();
