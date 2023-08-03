@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch ./src/main.ts",
     "build": "tsc",
-    "start": "tsc && node ./build/src/main.js",
+    "start": "tsc && node ./build/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mulf",

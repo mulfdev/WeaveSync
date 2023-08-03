@@ -2,24 +2,29 @@ import { BlockData } from "arweave/node/blocks";
 import Database from "better-sqlite3";
 
 const db = new Database("data.db");
-db.pragma("journal_mode = WAL");
 
 const batch: BlockData[] = [];
-export function addToDB(blockData: BlockData) {
-  db.exec(`CREATE TABLE IF NOT EXISTS block_data (
-    blockNumber INTEGER,
-    data TEXT
-    )`);
 
-  if (batch.length >= 15) {
-    const insert = db.prepare(
+export function addToDB(blockData: BlockData, batchSize: number) {
+  if (batch.length >= batchSize) {
+    const insertBlock = db.prepare(
       "INSERT INTO block_data (blockNumber, data) VALUES (@blockNumber, @data)"
     );
 
     const insertMany = db.transaction((blocks: BlockData[]) => {
+      const date = new Date();
+      console.log("blocks parsed ", blocks.length);
+      console.log("last saved block ", blocks[batchSize - 1]?.height);
+      console.log(
+        `Timestamp: ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      );
+      console.log("---------------------------");
+      console.log("");
       for (const block of blocks) {
-        console.log({ blockNumber: block.height });
-        insert.run({ blockNumber: block.height, data: JSON.stringify(block) });
+        insertBlock.run({
+          blockNumber: block.height,
+          data: JSON.stringify(block),
+        });
       }
     });
 
@@ -28,5 +33,4 @@ export function addToDB(blockData: BlockData) {
   }
 
   batch.push(blockData);
-  console.log("pushed to batch ", batch.length);
 }
