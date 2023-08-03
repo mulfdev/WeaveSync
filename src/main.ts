@@ -30,7 +30,7 @@ async function index({ throttleTime }: Params) {
 }
 
 function main() {
-  index({ throttleTime: 50 });
+  index({ throttleTime: 10 });
 }
 
 main();

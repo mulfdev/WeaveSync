@@ -11,8 +11,7 @@ export function addToDB(blockData: BlockData) {
     data TEXT
     )`);
 
-  if (batch.length >= 30) {
-    console.log("inside yeet");
+  if (batch.length >= 15) {
     const insert = db.prepare(
       "INSERT INTO block_data (blockNumber, data) VALUES (@blockNumber, @data)"
     );
