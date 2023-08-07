@@ -1,8 +1,10 @@
 import Database from "better-sqlite3";
 const db = new Database("data.db");
 
-export function setupDb() {
+function setupDb() {
   console.log("*** preparing database ***");
+  db.pragma("journal_mode = WAL");
+
   db.exec(`CREATE TABLE IF NOT EXISTS block_data 
     (
       blockNumber INTEGER,
@@ -11,5 +13,8 @@ export function setupDb() {
 
   db.exec(`CREATE TABLE IF NOT EXISTS lastBlock (id TEXT)`);
 
-  db.pragma("journal_mode = WAL");
+  const addInitBlock = db.prepare("INSERT INTO lastBlock (id) VALUES (@id)");
+  addInitBlock.run({ id: 0 });
 }
+
+setupDb();
