@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch ./src/main.ts",
     "build": "tsc",
-    "start": "tsc && node ./build/main.js",
+    "start": "tsc && pm2 start ecosystem.config.js",
+    "setupDb": "tsc && node ./build/scripts/setupDb.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mulf",
@@ -16,6 +17,7 @@
     "arweavekit": "^1.4.6",
     "better-sqlite3": "^8.5.0",
     "fastify": "^4.21.0",
+    "pm2": "^5.3.0",
     "pouchdb": "^8.0.1",
     "typescript": "^5.1.6"
   },

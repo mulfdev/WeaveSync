@@ -2,7 +2,7 @@ import Arweave from "arweave";
 
 import { addToDB } from "./db";
 import { BlockData } from "arweave/node/blocks";
-import Database from "better-sqlite3";
+import Database, { SqliteError } from "better-sqlite3";
 
 const arweave = Arweave.init({
   host: "arweave.net", // Hostname or IP address for a Arweave host
@@ -14,14 +14,14 @@ const db = new Database("data.db");
 
 type Params = {
   throttleTime: number;
-  maxRetries: number;
 };
 
 let currentBlock: BlockData | null = null;
 
-export async function runIndexer({ throttleTime, maxRetries }: Params) {
-  let retries = 0;
+const maxRetries = 2;
+let retries = 0;
 
+async function runIndexer({ throttleTime }: Params) {
   while (retries < maxRetries) {
     try {
       const lastBlock = db.prepare("SELECT * FROM lastBlock LIMIT 1").get();
@@ -44,13 +44,23 @@ export async function runIndexer({ throttleTime, maxRetries }: Params) {
         await new Promise((res) => setTimeout(res, throttleTime));
       }
     } catch (e) {
-      console.error(`Error encountered: ${e}. Retrying in 5 seconds...`);
       retries++;
-      if (retries >= maxRetries) {
-        console.error("Max retries reached. Exiting...");
-        throw e;
+
+      if (retries === maxRetries) {
+        throw new Error("Max retries exceeded");
       }
+
+      if (e instanceof SqliteError) {
+        console.error("Caught an SqliteError:", e.message);
+        console.log(
+          "*** dont forget to run the database setup command: npm run setupDB"
+        );
+        return;
+      }
+      console.error(`Error encountered: ${e}. Retrying in 5 seconds...`);
       await new Promise((res) => setTimeout(res, 5000)); // Wait for 5 seconds before retrying
     }
   }
 }
+
+runIndexer({ throttleTime: 5 });
