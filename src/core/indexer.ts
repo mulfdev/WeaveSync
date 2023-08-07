@@ -25,6 +25,7 @@ export async function runIndexer({ throttleTime, maxRetries }: Params) {
   while (retries < maxRetries) {
     try {
       const lastBlock = db.prepare("SELECT * FROM lastBlock LIMIT 1").get();
+      console.log({ lastBlock });
 
       await arweave.network.getInfo();
 
@@ -38,7 +39,7 @@ export async function runIndexer({ throttleTime, maxRetries }: Params) {
       while (currentBlock.previous_block) {
         currentBlock = await arweave.blocks.get(currentBlock.previous_block);
 
-        addToDB(currentBlock, 20);
+        addToDB(currentBlock, 25);
 
         await new Promise((res) => setTimeout(res, throttleTime));
       }
