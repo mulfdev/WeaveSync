@@ -14,7 +14,7 @@ function setupDb() {
   db.exec(`CREATE TABLE IF NOT EXISTS lastBlock (id TEXT)`);
 
   const addInitBlock = db.prepare("INSERT INTO lastBlock (id) VALUES (@id)");
-  addInitBlock.run({ id: 0 });
+  addInitBlock.run({ id: "" });
 }
 
 setupDb();

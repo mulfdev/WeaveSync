@@ -26,15 +26,11 @@ export function addToDB(blockData: BlockData, batchSize: number) {
           data: JSON.stringify(block),
         });
       }
-      // db.prepare("INSERT INTO lastBlock (id) VALUES (@id)").run(
-      //   blocks[batchSize - 1]?.indep_hash.toString()
-      // );
 
       db.prepare("DELETE FROM lastBlock").run();
 
       const stmt = db.prepare("INSERT INTO lastBlock (id) VALUES (@id)");
 
-      // Execute the statement with the object
       stmt.run({ id: blocks[batchSize - 1]?.indep_hash.toString() });
     });
 

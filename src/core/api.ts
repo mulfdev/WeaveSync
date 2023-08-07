@@ -23,11 +23,11 @@ fastify.get<{
   if (!req.query.blockNumber) {
     reply.status(400).send({ error: "Missing Block Number" });
   }
+
   const result = db
     .prepare("SELECT * FROM block_data WHERE blockNumber = ?")
     .get(req.query.blockNumber) as IBlockData | undefined;
 
-  console.log({ result });
   if (result && result.data) {
     reply.send({ data: JSON.parse(result.data) });
   }

@@ -6,8 +6,8 @@ import Database, { SqliteError } from "better-sqlite3";
 
 const arweave = Arweave.init({
   host: "arweave.net", // Hostname or IP address for a Arweave host
-  port: 80, // Port
-  protocol: "http", // Network protocol http or https
+  port: 443, // Port
+  protocol: "https", // Network protocol http or https
 });
 
 const db = new Database("data.db");
