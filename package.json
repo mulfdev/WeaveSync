@@ -7,6 +7,7 @@
     "build": "tsc",
     "start": "tsc && pm2 start ecosystem.config.js",
     "setupDb": "tsc && node ./build/scripts/setupDb.js",
+    "dev": "concurrently \"tsx watch ./src/core/api.ts\" \"tsx watch ./src/core/indexer.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mulf",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.4",
     "@types/node": "^20.4.5",
+    "concurrently": "^8.2.0",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
   }
