@@ -6,3 +6,4 @@ build
 *.db-wal
 data.db
 .DS_Store
+upload.zip
