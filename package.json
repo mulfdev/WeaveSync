@@ -1,8 +1,7 @@
 {
-  "name": "downweave",
+  "name": "weavesync",
   "version": "0.0.1",
-  "description": "download the entire weave",
-  "main": "main.js",
+  "description": "Arweave block indexer with rest API",
   "scripts": {
     "build": "tsc",
     "start": "tsc && pm2 start ecosystem.config.js",
