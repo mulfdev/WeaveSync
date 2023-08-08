@@ -17,12 +17,16 @@ let currentBlock: BlockData | null = null;
 async function runIndexer() {
   while (true) {
     try {
-      let lastBlock = db.prepare("SELECT * FROM lastBlock LIMIT 1").get();
+      let lastBlock = db.prepare("SELECT * FROM lastBlock LIMIT 1").get() as {
+        id: string;
+      };
       console.log({ lastBlock });
 
-      await arweave.network.getInfo();
-
-      currentBlock = await arweave.blocks.getCurrent();
+      if (lastBlock.id) {
+        currentBlock = await arweave.blocks.get(lastBlock.id);
+      } else {
+        currentBlock = await arweave.blocks.getCurrent();
+      }
 
       if (currentBlock === null) {
         throw new Error("Could not fetch block");
@@ -38,8 +42,7 @@ async function runIndexer() {
       }
     } catch (e) {
       if (e instanceof SqliteError) {
-        console.error("Caught an SqliteError:", e.message);
-        console.log(
+        throw new Error(
           "*** dont forget to run the database setup command: npm run setupDB"
         );
       }
