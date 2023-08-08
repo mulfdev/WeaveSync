@@ -20,9 +20,9 @@ async function runIndexer() {
       let lastBlock = db.prepare("SELECT * FROM lastBlock LIMIT 1").get() as {
         id: string;
       };
-      console.log({ lastBlock });
 
       if (lastBlock.id) {
+        console.log({ lastBlock });
         currentBlock = await arweave.blocks.get(lastBlock.id);
       } else {
         currentBlock = await arweave.blocks.getCurrent();
@@ -51,7 +51,7 @@ async function runIndexer() {
         process.exit(1);
       }
       console.error(`Error encountered: ${e}. Retrying in 10 seconds...`);
-      await new Promise((res) => setTimeout(res, 10000)); // Wait for 10 seconds before retrying
+      await new Promise((res) => setTimeout(res, 10000));
     }
   }
 }

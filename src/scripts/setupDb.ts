@@ -5,11 +5,11 @@ function setupDb() {
   console.log("*** preparing database ***");
   db.pragma("journal_mode = WAL");
 
-  db.exec(`CREATE TABLE IF NOT EXISTS block_data 
-    (
+  db.exec(`CREATE TABLE IF NOT EXISTS block_data (
       blockNumber INTEGER,
       data TEXT
-    )`);
+    )
+  `);
 
   db.exec(`CREATE TABLE IF NOT EXISTS lastBlock (id TEXT)`);
 
