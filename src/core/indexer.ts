@@ -40,11 +40,15 @@ async function runIndexer() {
 
         await new Promise((res) => setTimeout(res, 5));
       }
+
+      console.log("no more blocks");
+      process.exit(1);
     } catch (e) {
       if (e instanceof SqliteError) {
-        throw new Error(
+        console.error(
           "*** dont forget to run the database setup command: npm run setupDB"
         );
+        process.exit(1);
       }
       console.error(`Error encountered: ${e}. Retrying in 10 seconds...`);
       await new Promise((res) => setTimeout(res, 10000)); // Wait for 10 seconds before retrying

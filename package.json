@@ -8,6 +8,8 @@
     "start": "tsc && pm2 start ecosystem.config.js",
     "setupDb": "tsc && node ./build/scripts/setupDb.js",
     "dev": "concurrently \"tsx watch ./src/core/api.ts\" \"tsx watch ./src/core/indexer.ts\"",
+    "start:api": "tsc && node ./build/core/api.js",
+    "start:indexer": "tsc && node ./build/core/indexer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mulf",
